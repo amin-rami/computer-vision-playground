@@ -73,7 +73,10 @@ class VGGNet(nn.Module):
             num = layer.get("num")
             num = num if num else 1
             downsamples += num
-        return self.height // (2 ** downsamples), self.width // (2 ** downsamples)
+        h = self.height // (2 ** downsamples)
+        w = self.width // (2 ** downsamples)
+        k = self.conv_layer_conf[-1]["out_channels"] 
+        return h * w * k
 
     @property
     def conv_layer_conf(self):
