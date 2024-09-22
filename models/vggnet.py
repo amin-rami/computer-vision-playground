@@ -52,10 +52,10 @@ class VGGNet(nn.Module):
     def _make_fc_layers(self):
         fc_layers = []
         num = len(self.fc_layer_conf)
+        features_in = self._get_conv_out_features()
 
         for i, layer_conf in enumerate(self.fc_layer_conf):
             features_out = layer_conf["features_out"]
-            features_in = self._get_conv_out_features() if i == 0 else features_out
             p = layer_conf.get("dropout")
 
             fc_layers.append(nn.Linear(features_in, features_out))
@@ -63,6 +63,7 @@ class VGGNet(nn.Module):
                 fc_layers.append(nn.ReLU())
             if p:
                 fc_layers.append(nn.Dropout())
+            features_in = features_out
         return nn.Sequential(*fc_layers)
 
     def _get_conv_out_features(self):
@@ -70,12 +71,10 @@ class VGGNet(nn.Module):
         for layer in self.conv_layer_conf:
             if not layer.get("max_pooling"):
                 continue
-            num = layer.get("num")
-            num = num if num else 1
-            downsamples += num
+            downsamples += 1
         h = self.height // (2 ** downsamples)
         w = self.width // (2 ** downsamples)
-        k = self.conv_layer_conf[-1]["out_channels"] 
+        k = self.conv_layer_conf[-1]["out_channels"]
         return h * w * k
 
     @property
