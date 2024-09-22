@@ -40,7 +40,7 @@ class VGGNet(nn.Module):
                     in_ch = out_ch
                 layers.append(nn.Conv2d(in_ch, out_ch, 3, padding='same'))
                 if batch_normalization:
-                    layers.append([nn.BatchNorm2d(out_ch)])
+                    layers.append(nn.BatchNorm2d(out_ch))
                 layers.append(nn.ReLU())
                 if max_pooling and i == num - 1:
                     layers.append(nn.MaxPool2d(2, 2))
