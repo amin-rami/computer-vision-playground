@@ -56,11 +56,11 @@ class VGGNet(nn.Module):
         for i, layer_conf in enumerate(self.fc_layer_conf):
             features_out = layer_conf["features_out"]
             features_in = self._get_conv_out_features() if i == 0 else features_out
-            p = layer_conf["dropout"]
+            p = layer_conf.get("dropout")
 
             fc_layers.append(nn.Linear(features_in, features_out))
             if i + 1 != num:
-                fc_layers.append(nn.ReLu())
+                fc_layers.append(nn.ReLU())
             if p:
                 fc_layers.append(nn.Dropout())
         return nn.Sequential(*fc_layers)
