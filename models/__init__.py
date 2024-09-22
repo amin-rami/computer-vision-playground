@@ -1,1 +1,1 @@
-from .vgg import *      # noqa
+from .vggnet import *      # noqa
