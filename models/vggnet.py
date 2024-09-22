@@ -46,8 +46,8 @@ class VGGNet(nn.Module):
                     layers.append(nn.MaxPool2d(2, 2))
                 if p:
                     layers.append(nn.Dropout2d(p))
-            conv_layers.append(nn.Sequential(layers))
-        return nn.Sequential(conv_layers)
+            conv_layers.append(nn.Sequential(*layers))
+        return nn.Sequential(*conv_layers)
 
     def _make_fc_layers(self):
         fc_layers = []
@@ -63,7 +63,7 @@ class VGGNet(nn.Module):
                 fc_layers.append(nn.ReLu())
             if p:
                 fc_layers.append(nn.Dropout())
-        return nn.Sequential(fc_layers)
+        return nn.Sequential(*fc_layers)
 
     def _get_conv_out_features(self):
         downsamples = 0
