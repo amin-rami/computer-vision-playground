@@ -36,6 +36,8 @@ class VGGNet(nn.Module):
 
             layers = []
             for i in range(num):
+                if i != 0:
+                    in_ch = out_ch
                 layers.append(nn.Conv2d(in_ch, out_ch, 3, padding='same'))
                 if batch_normalization:
                     layers.append([nn.BatchNorm2d(out_ch)])
