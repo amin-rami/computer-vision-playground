@@ -25,13 +25,14 @@ class ResNet(nn.Module):
 
     def _make_conv_layers(self):
         conv_layers = []
-        for layer in self.conv_layer_conf:
+        for layer_conf in self.conv_layer_conf:
             layers = []
-            in_channels = layer["in_channels"]
-            out_channels = layer["out_channels"]
-            b_norm = layer.get("batch_normalization")
-            max_pool = layer.get("max_pooling")
-            num = layer.get("num")
+            in_channels = layer_conf["in_channels"]
+            out_channels = layer_conf["out_channels"]
+            b_norm = layer_conf.get("batch_normalization")
+            max_pool = layer_conf.get("max_pooling")
+            dropout = layer_conf.get("dropout")
+            num = layer_conf.get("num")
             num = num if num else 1
 
             for i in range(num):
@@ -41,7 +42,8 @@ class ResNet(nn.Module):
                     in_channels,
                     out_channels,
                     b_norm,
-                    max_pool and i + 1 == num
+                    max_pool and i + 1 == num,
+                    dropout
                 ))
             conv_layers.append(nn.Sequential(*layers))
         return nn.Sequential(*conv_layers)
@@ -92,7 +94,7 @@ class ResNet(nn.Module):
 
 
 class _BasicBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, b_norm=None, max_pooling=None):
+    def __init__(self, in_channels, out_channels, b_norm=None, max_pooling=None, p=None):
         super().__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -102,6 +104,7 @@ class _BasicBlock(nn.Module):
         self.conv2 = nn.Conv2d(out_channels, out_channels, 3, padding='same')
         self.batch_norm2 = nn.BatchNorm2d(out_channels) if b_norm else b_norm
         self.max_pooling = nn.MaxPool2d(2, 2) if max_pooling else max_pooling
+        self.dropout = nn.Dropout2d(p) if p else p
         self.relu = nn.ReLU()
         if in_channels != self.out_channels:
             self.projection = nn.Conv2d(in_channels, out_channels, 1, padding='same')
@@ -112,11 +115,15 @@ class _BasicBlock(nn.Module):
             residual = self.projection(residual)
 
         x = self.conv1(x)
+        if self.dropout:
+            x = self.dropout(x)
         if self.batch_norm1:
             x = self.batch_norm1(x)
         x = self.relu(x)
 
         x = self.conv2(x)
+        if self.dropout:
+            x = self.dropout(x)
         if self.batch_norm2:
             x = self.batch_norm2(x)
 
