@@ -13,6 +13,15 @@ class ResNet(nn.Module):
         self._fc_layer_conf = conv_layers
         self._height = height
         self._wdith = width
+        self.conv_layers = self._make_conv_layers()
+        self.flatten = nn.Flatten()
+        self.fc_layers = self._make_fc_layers()
+
+    def forward(self, x):
+        x = self.conv_layers(x)
+        x = self.flatten(x)
+        x = self.fc_layers(x)
+        return x
 
     def _make_conv_layers(self):
         conv_layers = []
@@ -35,6 +44,7 @@ class ResNet(nn.Module):
                     max_pool and i + 1 == num
                 ))
             conv_layers.append(nn.Sequential(*layers))
+        return nn.Sequential(*conv_layers)
 
     def _make_fc_layers(self):
         fc_layers = []
