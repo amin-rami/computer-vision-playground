@@ -111,7 +111,7 @@ class _BasicBlock(nn.Module):
         if self.in_channels != self.out_channels:
             residual = self.projection(residual)
 
-        x = self.conv2(x)
+        x = self.conv1(x)
         if self.batch_norm1:
             x = self.batch_norm1(x)
         x = self.relu(x)
