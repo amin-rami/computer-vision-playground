@@ -27,11 +27,11 @@ class ResNet(nn.Module):
         conv_layers = []
         for layer in self.conv_layer_conf:
             layers = []
-            in_channels = self.layer["in_channels"]
-            out_channels = self.layer["out_channels"]
-            b_norm = self.layer.get("b_norm")
-            max_pool = self.layer.get("max_pool")
-            num = self.layer.get("num")
+            in_channels = layer["in_channels"]
+            out_channels = layer["out_channels"]
+            b_norm = layer.get("b_norm")
+            max_pool = layer.get("max_pool")
+            num = layer.get("num")
             num = num if num else 1
 
             for i in range(num):
