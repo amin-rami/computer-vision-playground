@@ -10,7 +10,7 @@ class ResNet(nn.Module):
     def __init__(self, conv_layers, fc_layers, height, width):
         super().__init__()
         self._conv_layer_conf = conv_layers
-        self._fc_layer_conf = conv_layers
+        self._fc_layer_conf = fc_layers
         self._height = height
         self._wdith = width
         self.conv_layers = self._make_conv_layers()
