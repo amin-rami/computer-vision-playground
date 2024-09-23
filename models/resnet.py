@@ -29,8 +29,8 @@ class ResNet(nn.Module):
             layers = []
             in_channels = layer["in_channels"]
             out_channels = layer["out_channels"]
-            b_norm = layer.get("b_norm")
-            max_pool = layer.get("max_pool")
+            b_norm = layer.get("batch_normalization")
+            max_pool = layer.get("max_pooling")
             num = layer.get("num")
             num = num if num else 1
 
@@ -115,8 +115,10 @@ class _BasicBlock(nn.Module):
         if self.batch_norm1:
             x = self.batch_norm1(x)
         x = self.relu(x)
+
         x = self.conv2(x)
-        x = self.batch_norm2(x)
+        if self.batch_norm2:
+            x = self.batch_norm2(x)
 
         x = x + residual
         x = self.relu(x)
