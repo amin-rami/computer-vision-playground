@@ -10,5 +10,5 @@ class BaseModule(nn.Module):
     def infer(self, x: torch.Tensor) -> torch.Tensor:
         self.eval()
         with torch.no_grad():
-            x = self.forward(x)
+            x = self(x)
         return x
