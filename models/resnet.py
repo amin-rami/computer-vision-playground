@@ -1,4 +1,8 @@
+import torch
 import torch.nn as nn
+
+from typing import List
+
 from ._base import BaseModule
 
 
@@ -8,7 +12,7 @@ __all__ = [
 
 
 class ResNet(BaseModule):
-    def __init__(self, conv_layers, fc_layers, height, width, name=None):
+    def __init__(self, conv_layers: List[dict], fc_layers: List[dict], height: int, width: int, name: str = None):
         super().__init__(name)
         self._conv_layer_conf = conv_layers
         self._fc_layer_conf = fc_layers
@@ -18,13 +22,13 @@ class ResNet(BaseModule):
         self.flatten = nn.Flatten()
         self.fc_layers = self._make_fc_layers()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.conv_layers(x)
         x = self.flatten(x)
         x = self.fc_layers(x)
         return x
 
-    def _make_conv_layers(self):
+    def _make_conv_layers(self) -> nn.Sequential:
         conv_layers = []
         for layer_conf in self.conv_layer_conf:
             layers = []
@@ -49,7 +53,7 @@ class ResNet(BaseModule):
             conv_layers.append(nn.Sequential(*layers))
         return nn.Sequential(*conv_layers)
 
-    def _make_fc_layers(self):
+    def _make_fc_layers(self) -> nn.Sequential:
         fc_layers = []
         num = len(self.fc_layer_conf)
         features_in = self._get_conv_out_features()
@@ -66,7 +70,7 @@ class ResNet(BaseModule):
             features_in = features_out
         return nn.Sequential(*fc_layers)
 
-    def _get_conv_out_features(self):
+    def _get_conv_out_features(self) -> int:
         downsamples = 0
         for layer in self.conv_layer_conf:
             if not layer.get("max_pooling"):
@@ -95,7 +99,7 @@ class ResNet(BaseModule):
 
 
 class _BasicBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, b_norm=None, max_pooling=None, p=None):
+    def __init__(self, in_channels: int, out_channels: int, b_norm: bool = None, max_pooling: bool = None, p: float = None):
         super().__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -110,7 +114,7 @@ class _BasicBlock(nn.Module):
         if in_channels != self.out_channels:
             self.projection = nn.Conv2d(in_channels, out_channels, 1, padding='same')
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor):
         residual = x
         if self.in_channels != self.out_channels:
             residual = self.projection(residual)
