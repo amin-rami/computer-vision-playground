@@ -108,13 +108,12 @@ class TrainLoop:
         for epoch in range(self.trained_epoches + 1, self.trained_epoches + 1 + self.epoches):
             print("-" * 20 + " " + f"epoch {epoch}" + " " + "-" * 20)
             self._train_one_epoch()
-            print(f"train loss: {self.train_loss[-1]: .6f}")
+            print(f"train loss: {self.train_loss[-1]: .5f}")
             print(f"train accuracy: {self.train_acc[-1]: .2%}")
-            print("-" * 51)
 
             if (epoch == 1 or epoch % self.test_every == 0) and self.val_data and self.test_every:
-                print("-" * 12 + " " + f"running test at epoch {epoch}" + " " + "-" * 12)
+                print("testing the model...")
                 self._validate()
-                print(f"validation loss: {self.val_loss[-1]: .6f}")
+                print(f"validation loss: {self.val_loss[-1]: .5f}")
                 print(f"validation accuracy: {self.val_acc[-1]: .2%}")
-                print("-" * 51)
+            print("-" * 51)
