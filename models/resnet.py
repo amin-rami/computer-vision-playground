@@ -1,4 +1,5 @@
 import torch.nn as nn
+from ._base import BaseModule
 
 
 __all__ = [
@@ -6,9 +7,9 @@ __all__ = [
 ]
 
 
-class ResNet(nn.Module):
-    def __init__(self, conv_layers, fc_layers, height, width):
-        super().__init__()
+class ResNet(BaseModule):
+    def __init__(self, conv_layers, fc_layers, height, width, name=None):
+        super().__init__(name)
         self._conv_layer_conf = conv_layers
         self._fc_layer_conf = fc_layers
         self._height = height
