@@ -23,6 +23,7 @@ class TrainLoop:
             epoches: int,
             device: str,
             batch_size: int = 64,
+            num_workers=4,
             test_every=5,
             val_data: Dataset = None,
             save_every: int = 0,
@@ -35,6 +36,7 @@ class TrainLoop:
         self.epoches = epoches
         self.device = device
         self.batch_size = batch_size
+        self.num_workers = num_workers
         self.test_every = test_every
         self.val_data = val_data
         self.save_every = save_every
@@ -54,7 +56,7 @@ class TrainLoop:
         batches = torch.zeros(0.0).to(self.device)
 
         self.model.train()
-        train_loader = DataLoader(self.train_data, shuffle=True, batch_size=self.batch_size, num_workers=2)
+        train_loader = DataLoader(self.train_data, shuffle=True, batch_size=self.batch_size, num_workers=self.num_workers)
         mini_batches = (len(self.train_data) + self.batch_size - 1) // self.batch_size
 
         with tqdm(total=mini_batches) as prog:
@@ -88,7 +90,7 @@ class TrainLoop:
         total = torch.zeros(0.0).to(self.device)
         batches = torch.zeros(0.0).to(self.device)
 
-        val_loader = DataLoader(self.val_data, batch_size=len(self.val_data), num_workers=2)
+        val_loader = DataLoader(self.val_data, batch_size=len(self.val_data), num_workers=self.num_workers)
         for X_val, y_val in val_loader:
             X_val, y_val = X_val.to(self.device), y_val.to(self.device)
             logits = self.model.infer(X_val)
