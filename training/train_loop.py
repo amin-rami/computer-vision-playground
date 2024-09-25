@@ -125,7 +125,6 @@ class TrainLoop:
             path = None
             if epoch % self.save_every == 0 and self.save_every != -1:
                 path = Path(self.root / f"{self.model.name}_epoch{epoch}.pt").resolve()
-                torch.save(self.model, path)
             if epoch == trained_epoches + self.epoches:
                 path = Path(self.root / f"{self.model.name}_final.pt")
             if path:
