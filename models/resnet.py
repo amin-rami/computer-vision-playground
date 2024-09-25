@@ -120,20 +120,19 @@ class _BasicBlock(nn.Module):
             residual = self.projection(residual)
 
         x = self.conv1(x)
-        if self.dropout:
-            x = self.dropout(x)
         if self.batch_norm1:
             x = self.batch_norm1(x)
         x = self.relu(x)
-
-        x = self.conv2(x)
         if self.dropout:
             x = self.dropout(x)
+
+        x = self.conv2(x)
         if self.batch_norm2:
             x = self.batch_norm2(x)
-
         x = x + residual
         x = self.relu(x)
         if self.max_pooling:
             x = self.max_pooling(x)
+        if self.dropout:
+            x = self.dropout(x)
         return x
