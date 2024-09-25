@@ -4,6 +4,7 @@ from torch.optim.optimizer import Optimizer
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 from pathlib import Path
+import time
 
 from models import BaseModule
 
@@ -111,8 +112,11 @@ class TrainLoop:
     def train(self):
         trained_epoches = 0 if not self.train_epoches else self.train_epoches[-1]
         for epoch in range(trained_epoches + 1, trained_epoches + 1 + self.epoches):
+            t0 = time.time()
             print("-" * 20 + " " + f"epoch {epoch}" + " " + "-" * 20)
+            t0_train_step = time.time()
             self._train_one_epoch()
+            t1_train_tep = time.time()
             self.train_epoches.append(epoch)
             print(f"train loss: {self.train_loss[-1]: .4f}")
             print(f"train accuracy: {self.train_acc[-1]: .2%}")
@@ -135,3 +139,11 @@ class TrainLoop:
                     path = Path(self.root / f"{self.model.name}_final.pt").resolve()
                     self.root.mkdir(parents=True, exist_ok=True)
                     torch.save(self.model, path)
+            t1 = time.time()    
+            train_time = t1_train_tep - t0_train_step
+            loop_time = t1 - t0
+            print('='*40)
+            print(f"train time: {train_time}")
+            print(f"loop time: {loop_time}")
+            print(f"train step took {train_time/loop_time: 2%} of one loop time")
+            print('='*40)
