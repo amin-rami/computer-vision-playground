@@ -90,7 +90,7 @@ class TrainLoop:
 
         val_loader = DataLoader(self.val_data, batch_size=len(self.val_data))
         for X_val, y_val in val_loader:
-            X_train, y_train = X_train.to(self.device), y_train.to(self.device)
+            X_val, y_val = X_val.to(self.device), y_val.to(self.device)
             logits = self.model.infer(X_val)
             batch_loss = self.loss_fn(logits, y_val)
 
