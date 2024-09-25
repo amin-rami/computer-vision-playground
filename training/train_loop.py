@@ -50,10 +50,10 @@ class TrainLoop:
         self.val_epoches = []
 
     def _train_one_epoch(self):
-        loss = torch.zeros(0.0).to(self.device)
-        correct = torch.zeros(0.0).to(self.device)
-        total = torch.zeros(0.0).to(self.device)
-        batches = torch.zeros(0.0).to(self.device)
+        loss = torch.tensor(0.0).to(self.device)
+        correct = torch.tensor(0.0).to(self.device)
+        total = torch.tensor(0.0).to(self.device)
+        batches = torch.tensor(0.0).to(self.device)
 
         self.model.train()
         train_loader = DataLoader(self.train_data, shuffle=True, batch_size=self.batch_size, num_workers=self.num_workers)
@@ -85,10 +85,10 @@ class TrainLoop:
         self.train_loss.append(loss.item())
 
     def _validate(self):
-        loss = torch.zeros(0.0).to(self.device)
-        correct = torch.zeros(0.0).to(self.device)
-        total = torch.zeros(0.0).to(self.device)
-        batches = torch.zeros(0.0).to(self.device)
+        loss = torch.tensor(0.0).to(self.device)
+        correct = torch.tensor(0.0).to(self.device)
+        total = torch.tensor(0.0).to(self.device)
+        batches = torch.tensor(0.0).to(self.device)
 
         val_loader = DataLoader(self.val_data, batch_size=len(self.val_data), num_workers=self.num_workers)
         for X_val, y_val in val_loader:
