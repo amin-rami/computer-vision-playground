@@ -49,10 +49,10 @@ class TrainLoop:
         self.val_epoches = []
 
     def _train_one_epoch(self):
-        loss = 0
-        correct = 0
-        total = 0
-        batches = 0
+        loss = torch.tensor(0.0).to(self.device)
+        correct = torch.tensor(0.0).to(self.device)
+        total = torch.tensor(0.0).to(self.device)
+        batches = torch.tensor(0.0).to(self.device)
 
         self.model.train()
         train_loader = DataLoader(self.train_data, shuffle=True, batch_size=self.batch_size)
@@ -71,7 +71,7 @@ class TrainLoop:
                 class_pred = torch.argmax(logits, dim=-1)
                 class_train = torch.argmax(y_train, dim=-1)
 
-                correct += torch.sum(class_pred == class_train).item()
+                correct += torch.sum(class_pred == class_train)
                 total += len(class_train)
                 loss += batch_loss
                 batches += 1
@@ -80,14 +80,14 @@ class TrainLoop:
         loss /= batches
         acc = correct / total
 
-        self.train_acc.append(acc)
-        self.train_loss.append(loss)
+        self.train_acc.append(acc.item())
+        self.train_loss.append(loss.item())
 
     def _validate(self):
-        loss = 0
-        correct = 0
-        total = 0
-        batches = 0
+        loss = torch.tensor(0.0).to(self.device)
+        correct = torch.tensor(0.0).to(self.device)
+        total = torch.tensor(0.0).to(self.device)
+        batches = torch.tensor(0.0).to(self.device)
 
         val_loader = DataLoader(self.val_data, batch_size=len(self.val_data))
         for X_val, y_val in val_loader:
@@ -98,7 +98,7 @@ class TrainLoop:
             class_pred = torch.argmax(logits, dim=-1)
             class_val = torch.argmax(y_val, dim=-1)
 
-            correct += torch.sum(class_pred == class_val).item()
+            correct += torch.sum(class_pred == class_val)
             total += len(class_val)
             loss += batch_loss
             batches += 1
@@ -106,8 +106,8 @@ class TrainLoop:
         loss /= batches
         acc = correct / total
 
-        self.val_acc.append(acc)
-        self.val_loss.append(loss)
+        self.val_acc.append(acc.item())
+        self.val_loss.append(loss.item())
 
     def train(self):
         trained_epoches = 0 if not self.train_epoches else self.train_epoches[-1]
