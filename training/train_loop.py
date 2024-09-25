@@ -71,8 +71,6 @@ class TrainLoop:
                 self.optimizer.zero_grad()
                 batch_loss.backward()
                 self.optimizer.step()
-                if self.lr_scheduler:
-                    self.lr_scheduler.step()
 
                 class_pred = torch.argmax(logits, dim=-1)
                 class_train = torch.argmax(y_train, dim=-1)
@@ -82,6 +80,9 @@ class TrainLoop:
                 loss += batch_loss
                 batches += 1
                 prog.update(1)
+
+        if self.lr_scheduler:
+            self.lr_scheduler.step()
 
         loss /= batches
         acc = correct / total
