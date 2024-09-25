@@ -21,6 +21,7 @@ class TrainLoop:
             loss_fn: nn.Module,
             train_data: Dataset,
             epoches: int,
+            device: str,
             batch_size: int = 64,
             test_every=5,
             val_data: Dataset = None,
@@ -32,6 +33,7 @@ class TrainLoop:
         self.loss_fn = loss_fn
         self.train_data = train_data
         self.epoches = epoches
+        self.device = device
         self.batch_size = batch_size
         self.test_every = test_every
         self.val_data = val_data
@@ -57,6 +59,7 @@ class TrainLoop:
 
         with tqdm(total=mini_batches) as prog:
             for X_train, y_train in train_loader:
+                X_train, y_train = X_train.to(self.device), y_train.to(self.device)
                 logits = self.model(X_train)
                 batch_loss = self.loss_fn(logits, y_train)
 
