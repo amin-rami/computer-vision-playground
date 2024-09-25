@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.optim.optimizer import Optimizer
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
+from pathlib import Path
 
 from models import BaseModule
 
@@ -24,7 +25,7 @@ class TrainLoop:
             test_every=5,
             val_data: Dataset = None,
             save_every: int = 0,
-            save_file: str = None,
+            root: str = None,
     ):
         self.model = model
         self.optimizer = optimizer
@@ -35,9 +36,8 @@ class TrainLoop:
         self.test_every = test_every
         self.val_data = val_data
         self.save_every = save_every
-        self.save_file = save_file
+        self.root = Path(root).resolve()
 
-        self.trained_epoches = 0
         self.train_acc = []
         self.train_loss = []
         self.train_epoches = []
@@ -105,15 +105,29 @@ class TrainLoop:
         self.val_loss.append(loss)
 
     def train(self):
-        for epoch in range(self.trained_epoches + 1, self.trained_epoches + 1 + self.epoches):
+        trained_epoches = 0 if not self.train_epoches else self.train_epoches[-1]
+        for epoch in range(trained_epoches + 1, trained_epoches + 1 + self.epoches):
             print("-" * 20 + " " + f"epoch {epoch}" + " " + "-" * 20)
             self._train_one_epoch()
-            print(f"train loss: {self.train_loss[-1]: .5f}")
+            self.train_epoches.append(epoch)
+            print(f"train loss: {self.train_loss[-1]: .4f}")
             print(f"train accuracy: {self.train_acc[-1]: .2%}")
 
             if (epoch == 1 or epoch % self.test_every == 0) and self.val_data and self.test_every:
                 print("testing the model...")
                 self._validate()
-                print(f"validation loss: {self.val_loss[-1]: .5f}")
+                self.val_epoches(epoch)
+                print(f"validation loss: {self.val_loss[-1]: .4f}")
                 print(f"validation accuracy: {self.val_acc[-1]: .2%}")
             print("-" * 51)
+        
+        if self.save_every:
+            path = None
+            if epoch % self.save_every == 0 and self.save_every != -1:
+                path = Path(self.root / f"{self.model.name}_epoch{epoch}.pt").resolve()
+                torch.save(self.model, path)
+            if epoch == trained_epoches + self.epoches:
+                path = Path(self.root / f"{self.model.name}_final.pt")
+            if path:
+                self.root.mkdir(parents=True, exist_ok=True)
+                torch.save(self.model, path)
