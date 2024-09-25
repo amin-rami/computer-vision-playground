@@ -40,11 +40,11 @@
         "fc_layers": [
             {
                 "features_out": 128,
-                "dropout": 0.35
+                "dropout": false
             },
             {
                 "features_out": 64,
-                "dropout": 0.35
+                "dropout": false
             },
             {
                 "features_out": 10,
@@ -97,11 +97,11 @@
         "fc_layers": [
             {
                 "features_out": 128,
-                "dropout": 0.35
+                "dropout": false
             },
             {
                 "features_out": 64,
-                "dropout": 0.35
+                "dropout": false
             },
             {
                 "features_out": 10,
