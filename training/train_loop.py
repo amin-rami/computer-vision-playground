@@ -132,7 +132,7 @@ class TrainLoop:
                 print(f"validation loss: {self.val_loss[-1]: .4f}")
                 print(f"validation accuracy: {self.val_acc[-1]: .2%}")
             print("-" * 51)
-        
+
             if self.save_every:
                 path = None
                 if epoch % self.save_every == 0 and self.save_every != -1:
