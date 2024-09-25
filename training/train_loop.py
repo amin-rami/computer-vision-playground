@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torch.optim.optimizer import Optimizer
+from torch.optim.lr_scheduler import LRScheduler
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 from pathlib import Path
@@ -22,6 +23,7 @@ class TrainLoop:
             train_data: Dataset,
             epoches: int,
             device: str,
+            lr_scheduler: LRScheduler = None,
             batch_size: int = 64,
             num_workers: int = 4,
             test_every: int = 5,
@@ -35,6 +37,7 @@ class TrainLoop:
         self.train_data = train_data
         self.epoches = epoches
         self.device = device
+        self.lr_scheduler = lr_scheduler
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.test_every = test_every
@@ -68,6 +71,8 @@ class TrainLoop:
                 self.optimizer.zero_grad()
                 batch_loss.backward()
                 self.optimizer.step()
+                if self.lr_scheduler:
+                    self.lr_scheduler.step()
 
                 class_pred = torch.argmax(logits, dim=-1)
                 class_train = torch.argmax(y_train, dim=-1)
