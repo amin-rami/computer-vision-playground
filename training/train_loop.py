@@ -121,12 +121,13 @@ class TrainLoop:
                 print(f"validation accuracy: {self.val_acc[-1]: .2%}")
             print("-" * 51)
         
-        if self.save_every:
-            path = None
-            if epoch % self.save_every == 0 and self.save_every != -1:
-                path = Path(self.root / f"{self.model.name}_epoch{epoch}.pt").resolve()
-            if epoch == trained_epoches + self.epoches:
-                path = Path(self.root / f"{self.model.name}_final.pt").resolve()
-            if path is not None:
-                self.root.mkdir(parents=True, exist_ok=True)
-                torch.save(self.model, path)
+            if self.save_every:
+                path = None
+                if epoch % self.save_every == 0 and self.save_every != -1:
+                    path = Path(self.root / f"{self.model.name}_epoch{epoch}.pt").resolve()
+                    self.root.mkdir(parents=True, exist_ok=True)
+                    torch.save(self.model, path)
+                if epoch == trained_epoches + self.epoches:
+                    path = Path(self.root / f"{self.model.name}_final.pt").resolve()
+                    self.root.mkdir(parents=True, exist_ok=True)
+                    torch.save(self.model, path)
