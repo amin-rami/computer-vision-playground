@@ -116,7 +116,7 @@ class TrainLoop:
             if (epoch == 1 or epoch % self.test_every == 0) and self.val_data and self.test_every:
                 print("testing the model...")
                 self._validate()
-                self.val_epoches(epoch)
+                self.val_epoches.append(epoch)
                 print(f"validation loss: {self.val_loss[-1]: .4f}")
                 print(f"validation accuracy: {self.val_acc[-1]: .2%}")
             print("-" * 51)
