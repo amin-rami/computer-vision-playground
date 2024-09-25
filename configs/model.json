@@ -1,7 +1,8 @@
-{
+[
+    {
     "class": "ResNet",
     "parameters": {
-        "name": "simple_resnet",
+        "name": "resnet",
         "conv_layers": [
             {
                 "in_channels": 3,
@@ -39,11 +40,68 @@
         "fc_layers": [
             {
                 "features_out": 128,
-                "dropout": 0.2
+                "dropout": 0.25
             },
             {
                 "features_out": 64,
-                "dropout": 0.2
+                "dropout": 0.25
+            },
+            {
+                "features_out": 10,
+                "dropout": false
+            }
+        ],
+        "height": 28,
+        "width": 28
+    }
+
+},
+{
+    "class": "VGGNet",
+    "parameters": {
+        "name": "vggnet",
+        "conv_layers": [
+            {
+                "in_channels": 3,
+                "out_channels": 16,
+                "batch_normalization": true,
+                "dropout": false,
+                "max_pooling": false,
+                "num": 2
+            },
+            {
+                "in_channels": 16,
+                "out_channels": 16,
+                "batch_normalization": true,
+                "dropout": 0.2,
+                "max_pooling": true,
+                "num": 4
+            },
+            {
+                "in_channels": 16,
+                "out_channels": 32,
+                "batch_normalization": true,
+                "dropout": 0.2,
+                "max_pooling": true,
+                "num": 6
+            },
+            {
+                "in_channels": 32,
+                "out_channels": 64,
+                "batch_normalization": true,
+                "dropout": 0.2,
+                "max_pooling": false,
+                "num": 6
+            }
+        ],
+        "fc_layers": [
+            {
+                "features_out": 128,
+                "dropout": 0.25
+            },
+            {
+                "features_out": 64,
+                "dropout": 0.25
             },
             {
                 "features_out": 10,
@@ -55,3 +113,4 @@
     }
 
 }
+]
