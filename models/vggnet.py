@@ -67,7 +67,7 @@ class VGGNet(BaseModule):
             if i + 1 != num:
                 fc_layers.append(nn.ReLU())
             if p:
-                fc_layers.append(nn.Dropout())
+                fc_layers.append(nn.Dropout(p))
             features_in = features_out
         return nn.Sequential(*fc_layers)
 
