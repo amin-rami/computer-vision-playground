@@ -75,9 +75,9 @@ class TrainLoop:
                 class_pred = torch.argmax(logits, dim=-1)
                 class_train = torch.argmax(y_train, dim=-1)
 
-                correct += torch.sum(class_pred == class_train)
+                correct += torch.sum(class_pred == class_train).detach()
                 total += len(class_train)
-                loss += batch_loss
+                loss += batch_loss.detach()
                 batches += 1
                 prog.update(1)
 
