@@ -24,7 +24,7 @@ class TrainLoop:
             loss_fn: nn.Module,
             train_dataloader: DataLoader,
             epoches: int,
-            device: str,
+            device: str = None,
             lr_scheduler: LRScheduler = None,
             test_every: int = 5,
             val_dataloader: DataLoader = None,
