@@ -102,7 +102,7 @@ class TrainLoop:
             loss += batch_loss
 
         loss = loss.item() / batches
-        acc = correct.item() / dataset_len 
+        acc = correct.item() / dataset_len
 
         self.val_acc.append(acc)
         self.val_loss.append(loss)
