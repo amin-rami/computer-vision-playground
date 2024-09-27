@@ -2,9 +2,11 @@ import torch
 import torch.nn as nn
 from torch.optim.optimizer import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
+
 from tqdm import tqdm
 from pathlib import Path
+import math
 
 from models import BaseModule
 
@@ -20,28 +22,24 @@ class TrainLoop:
             model: BaseModule,
             optimizer: Optimizer,
             loss_fn: nn.Module,
-            train_data: Dataset,
+            train_dataloader: DataLoader,
             epoches: int,
             device: str,
             lr_scheduler: LRScheduler = None,
-            batch_size: int = 64,
-            num_workers: int = 4,
             test_every: int = 5,
-            val_data: Dataset = None,
+            val_dataloader: DataLoader = None,
             save_every: int = 0,
             root: str = None,
     ):
         self.model = model
         self.optimizer = optimizer
         self.loss_fn = loss_fn
-        self.train_data = train_data
+        self.train_dataloader = train_dataloader
         self.epoches = epoches
         self.device = device
         self.lr_scheduler = lr_scheduler
-        self.batch_size = batch_size
-        self.num_workers = num_workers
         self.test_every = test_every
-        self.val_data = val_data
+        self.val_dataloader = val_dataloader
         self.save_every = save_every
         self.root = Path(root).resolve()
 
@@ -55,15 +53,13 @@ class TrainLoop:
     def _train_one_epoch(self):
         loss = torch.tensor(0.0).to(self.device)
         correct = torch.tensor(0.0).to(self.device)
-        total = torch.tensor(0.0).to(self.device)
-        batches = torch.tensor(0.0).to(self.device)
 
         self.model.train()
-        train_loader = DataLoader(self.train_data, shuffle=True, batch_size=self.batch_size, num_workers=self.num_workers)
-        mini_batches = (len(self.train_data) + self.batch_size - 1) // self.batch_size
+        dataset_len = len(self.train_dataloader.dataset)
+        batches = math.ceil(dataset_len / self.train_dataloader.batch_size)
 
-        with tqdm(total=mini_batches) as prog:
-            for X_train, y_train in train_loader:
+        with tqdm(total=batches) as prog:
+            for X_train, y_train in self.train_dataloader:
                 X_train, y_train = X_train.to(self.device), y_train.to(self.device)
                 logits = self.model(X_train)
                 batch_loss = self.loss_fn(logits, y_train)
@@ -72,32 +68,29 @@ class TrainLoop:
                 batch_loss.backward()
                 self.optimizer.step()
 
-                class_pred = torch.argmax(logits, dim=-1)
-                class_train = torch.argmax(y_train, dim=-1)
+                class_pred = torch.argmax(logits, dim=-1).detach()
+                class_train = torch.argmax(y_train, dim=-1).detach()
 
-                correct += torch.sum(class_pred == class_train).detach()
-                total += len(class_train)
+                correct += torch.sum(class_pred == class_train)
                 loss += batch_loss.detach()
-                batches += 1
                 prog.update(1)
 
         if self.lr_scheduler:
             self.lr_scheduler.step()
 
-        loss /= batches
-        acc = correct / total
+        loss = loss.item() / batches
+        acc = correct.item() / dataset_len
 
-        self.train_acc.append(acc.item())
-        self.train_loss.append(loss.item())
+        self.train_acc.append(acc)
+        self.train_loss.append(loss)
 
     def _validate(self):
         loss = torch.tensor(0.0).to(self.device)
         correct = torch.tensor(0.0).to(self.device)
-        total = torch.tensor(0.0).to(self.device)
-        batches = torch.tensor(0.0).to(self.device)
 
-        val_loader = DataLoader(self.val_data, batch_size=len(self.val_data), num_workers=self.num_workers)
-        for X_val, y_val in val_loader:
+        dataset_len = len(self.val_dataloader.dataset)
+        batches = math.ceil(dataset_len / self.val_dataloader.batch_size)
+        for X_val, y_val in self.val_dataloader:
             X_val, y_val = X_val.to(self.device), y_val.to(self.device)
             logits = self.model.infer(X_val)
             batch_loss = self.loss_fn(logits, y_val)
@@ -106,15 +99,13 @@ class TrainLoop:
             class_val = torch.argmax(y_val, dim=-1)
 
             correct += torch.sum(class_pred == class_val)
-            total += len(class_val)
             loss += batch_loss
-            batches += 1
 
-        loss /= batches
-        acc = correct / total
+        loss = loss.item() / batches
+        acc = correct.item() / dataset_len 
 
-        self.val_acc.append(acc.item())
-        self.val_loss.append(loss.item())
+        self.val_acc.append(acc)
+        self.val_loss.append(loss)
 
     def train(self):
         trained_epoches = 0 if not self.train_epoches else self.train_epoches[-1]
