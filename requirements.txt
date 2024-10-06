@@ -1,0 +1,32 @@
+Brotli @ file:///C:/b/abs_3d36mno480/croot/brotli-split_1714483178642/work
+certifi @ file:///C:/b/abs_1fw_exq1si/croot/certifi_1725551736618/work/certifi
+charset-normalizer @ file:///croot/charset-normalizer_1721748349566/work
+colorama @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/colorama_1699472650914/work
+filelock @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/filelock_1701807523603/work
+flake8 @ file:///C:/b/abs_11zrixwsv1/croot/flake8_1726157202790/work
+idna @ file:///C:/b/abs_aad84bnnw5/croot/idna_1714398896795/work
+Jinja2 @ file:///C:/b/abs_92fccttino/croot/jinja2_1716993447201/work
+MarkupSafe @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/markupsafe_1707425732791/work
+mccabe @ file:///opt/conda/conda-bld/mccabe_1644221741721/work
+mkl-service==2.4.0
+mkl_fft @ file:///C:/b/abs_f55mv94vyg/croot/mkl_fft_1725370278455/work
+mkl_random @ file:///C:/b/abs_21ydbzdu8d/croot/mkl_random_1725370276095/work
+mpmath @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/mpmath_1699484863771/work
+networkx @ file:///C:/b/abs_3bxnu56g9d/croot/networkx_1717597507456/work
+numpy @ file:///C:/b/abs_0123vcxhf8/croot/numpy_and_numpy_base_1725470331966/work/dist/numpy-2.0.1-cp312-cp312-win_amd64.whl#sha256=e3e9d7fcaa32e9aa86aa46a7191a47fc4c4b35942462bbbedd17c45ef934dccd
+pillow @ file:///C:/b/abs_32o8er3uqp/croot/pillow_1721059447598/work
+pycodestyle @ file:///C:/b/abs_9bj6ihy3hn/croot/pycodestyle_1726150314067/work
+pyflakes @ file:///C:/b/abs_b6t1aazq2e/croot/pyflakes_1708963020907/work
+PySocks @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/pysocks_1699473336188/work
+PyYAML @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/pyyaml_1699479991712/work
+requests @ file:///C:/b/abs_9frifg92q2/croot/requests_1721410901096/work
+setuptools==75.1.0
+sympy @ file:///C:/b/abs_4e4p71hdj_/croot/sympy_1724938208509/work
+torch==2.4.1
+torchaudio==2.4.1
+torchvision==0.19.1
+tqdm @ file:///C:/b/abs_77wju137gk/croot/tqdm_1724853945787/work
+typing_extensions @ file:///C:/b/abs_0as9mdbkfl/croot/typing_extensions_1715268906610/work
+urllib3 @ file:///C:/b/abs_a7hvzm4y95/croot/urllib3_1718912661242/work
+wheel==0.44.0
+win-inet-pton @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/win_inet_pton_1699472992992/work
